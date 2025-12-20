@@ -4,12 +4,9 @@ from django.db import models
 
 class User(AbstractUser):
     """Кастомная модель пользователя с email для авторизации"""
+
     username = None
-    email = models.EmailField(
-        unique=True,
-        verbose_name="Почта",
-        help_text="Укажите почту"
-    )
+    email = models.EmailField(unique=True, verbose_name="Почта", help_text="Укажите почту")
 
     phone = models.CharField(
         max_length=35,

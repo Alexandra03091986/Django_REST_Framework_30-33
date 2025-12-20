@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Course(models.Model):
-    """Кастомная модель курса"""
+    """Модель курса"""
+
     name = models.CharField(
         max_length=100,
         verbose_name="Название курса",
@@ -28,6 +29,7 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    """Модель урока в рамках курса"""
     name = models.CharField(
         max_length=100,
         verbose_name="Название урока",
@@ -38,7 +40,6 @@ class Lesson(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Курс",
         help_text="Выберите курс",
-
     )
     description = models.TextField(
         verbose_name="Описание урока",
