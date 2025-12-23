@@ -78,7 +78,6 @@ class Payments(models.Model):
         choices=[("cash", "Наличные"), ("transfer", "Перевод на счет")],
         verbose_name="Способ оплаты",
         help_text="Выберите способ оплаты",
-
     )
 
     class Meta:
