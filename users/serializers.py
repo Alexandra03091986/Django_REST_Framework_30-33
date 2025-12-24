@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from users.models import Payments
+from users.models import Payments, User
 
 
 class PaymentsSerializer(ModelSerializer):
@@ -10,3 +10,22 @@ class PaymentsSerializer(ModelSerializer):
         """Метаданные сериализатора платежи."""
         model = Payments
         fields = "__all__"
+
+
+class UserSerializer(ModelSerializer):
+    """Сериализатор для модели Пользователь."""
+    payments_set = PaymentsSerializer(many=True, read_only=True)
+    class Meta:
+        """Метаданные сериализатора пользователь."""
+        model = User
+        fields = ("id", "email", "phone", "city", "payments_set")
+
+
+class UserHistoryPaymentsSerializer(ModelSerializer):
+    """Сериализатор для модели История платежей."""
+    payments_set = PaymentsSerializer(many=True, read_only=True)
+
+    class Meta:
+        """Метаданные сериализатора История платежей."""
+        model = User
+        fields = ("id", "email", "phone", "city", "payments_set")
