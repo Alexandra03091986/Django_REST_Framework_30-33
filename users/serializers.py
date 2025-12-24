@@ -19,7 +19,11 @@ class UserSerializer(ModelSerializer):
     class Meta:
         """Метаданные сериализатора пользователь."""
         model = User
-        fields = ("id", "email", "phone", "city", "payments_set")
+        fields = ("id", "email", "phone", "city", "avatar", "payments_set")
+
+    def update(self, instance, validated_data):
+        """Кастомная логика обновления в сериализаторе"""
+        return super().update(instance, validated_data)
 
 
 class UserHistoryPaymentsSerializer(ModelSerializer):
