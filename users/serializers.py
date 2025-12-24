@@ -15,6 +15,7 @@ class PaymentsSerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     """Сериализатор для модели Пользователь."""
     payments_set = PaymentsSerializer(many=True, read_only=True)
+
     class Meta:
         """Метаданные сериализатора пользователь."""
         model = User

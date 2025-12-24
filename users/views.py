@@ -1,6 +1,5 @@
-from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework import filters
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import Payments, User
@@ -20,6 +19,7 @@ class PaymentViewSet(ModelViewSet):
     ordering_fields = ['date_payment']
     # Сортировка по умолчанию (новые первыми)
     ordering = ['-date_payment']
+
 
 class UserViewSet(ModelViewSet):
     """ViewSet для пользователя"""

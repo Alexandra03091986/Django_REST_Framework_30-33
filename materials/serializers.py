@@ -24,6 +24,7 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = "__all__"
 
+
 class CourseDetailSerializer(ModelSerializer):
     """Сериализатор для детального представления курса.
 
