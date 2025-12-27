@@ -1,4 +1,5 @@
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from materials.models import Course, Lesson
@@ -30,6 +31,7 @@ class LessonCreateApiView(CreateAPIView):
     Обрабатывает POST запросы для создания уроков."""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated, ~IsModer]
 
 
 class LessonListApiView(ListAPIView):
@@ -44,6 +46,7 @@ class LessonRetrieveApiView(RetrieveAPIView):
     Обрабатывает GET запросы для получения конкретного урока по ID."""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsModer]
 
 
 class LessonUpdateApiView(UpdateAPIView):
@@ -59,3 +62,4 @@ class LessonDestroyApiView(DestroyAPIView):
     Обрабатывает DELETE запросы для удаления урока по ID."""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated, ~IsModer]
