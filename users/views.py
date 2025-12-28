@@ -1,12 +1,13 @@
+from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import CreateAPIView
 
 from users.models import Payments, User
-from users.serializers import PaymentsSerializer, UserHistoryPaymentsSerializer, UserSerializer, \
-    UserRegistrationSerializer
+from users.serializers import (PaymentsSerializer, UserHistoryPaymentsSerializer, UserRegistrationSerializer,
+                               UserSerializer)
 
 
 class PaymentViewSet(ModelViewSet):
@@ -47,6 +48,6 @@ class UserHistoryPaymentsViewSet(ModelViewSet):
 
     serializer_class = UserHistoryPaymentsSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[User]:
         # Предзагрузка платежей пользователя для оптимизации запросов
         return User.objects.prefetch_related('payments_set')

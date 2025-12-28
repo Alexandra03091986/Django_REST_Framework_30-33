@@ -1,3 +1,6 @@
+from typing import Type
+
+from rest_framework import serializers
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -11,12 +14,12 @@ class CourseViewSet(ModelViewSet):
     """ViewSet для выполнения всех CRUD операций с курсами."""
     queryset = Course.objects.all()
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Type[serializers.Serializer]:
         if self.action == "retrieve":
             return CourseDetailSerializer
         return CourseSerializer
 
-    def get_permissions(self):
+    def get_permissions(self) -> None:
         """Определяем permissions в зависимости от действия."""
         if self.action == "create":
             # Создавать курсы могут только аутентифицированные пользователи НЕ модераторы
@@ -29,7 +32,7 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = [IsAuthenticated, IsOwner & ~IsModer]
         return super().get_permissions()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: serializers.Serializer) -> None:
         """Автоматически устанавливает текущего пользователя как владельца создаваемого объекта."""
         serializer.save(owner=self.request.user)
 
@@ -41,7 +44,7 @@ class LessonCreateApiView(CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModer]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: serializers.Serializer) -> None:
         """Автоматически устанавливает текущего пользователя как владельца создаваемого объекта."""
         serializer.save(owner=self.request.user)
 
@@ -51,7 +54,7 @@ class LessonListApiView(ListAPIView):
     Обрабатывает GET запросы для получения списка уроков."""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsOwner, IsModer]
+    permission_classes = [IsAuthenticated, IsOwner | IsModer]
 
 
 class LessonRetrieveApiView(RetrieveAPIView):

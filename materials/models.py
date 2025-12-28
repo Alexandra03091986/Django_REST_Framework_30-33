@@ -32,6 +32,7 @@ class Course(models.Model):
         verbose_name="Владелец курса",
         help_text="Укажите владельца курса",
     )
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"

@@ -1,4 +1,5 @@
-from rest_framework import permissions
+from django.db.models import Model
+from rest_framework import permissions, request, views
 
 
 class IsModer(permissions.BasePermission):
@@ -7,14 +8,14 @@ class IsModer(permissions.BasePermission):
     Проверяет, состоит ли аутентифицированный пользователь в группе с названием
     "moderators". Если пользователь не аутентифицирован или не состоит в указанной
     группе, доступ запрещается."""
-    def has_permission(self, request, view):
+    def has_permission(self, request: request.Request, view: views.APIView) -> bool:
         """Проверяет право доступа пользователя к представлению."""
         return request.user.is_authenticated and request.user.groups.filter(name="moderators").exists()
 
 
 class IsOwner(permissions.BasePermission):
     """Проверяет, является ли пользователь владельцем."""
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request: request.Request, view: views.APIView, obj) -> bool:
 
         if obj.owner == request.user:
             """Проверяет право доступа к конкретному объекту."""
