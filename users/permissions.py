@@ -1,4 +1,3 @@
-from django.db.models import Model
 from rest_framework import permissions, request, views
 
 

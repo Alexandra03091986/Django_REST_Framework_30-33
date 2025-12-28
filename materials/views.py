@@ -24,6 +24,9 @@ class CourseViewSet(ModelViewSet):
         if self.action == "create":
             # Создавать курсы могут только аутентифицированные пользователи НЕ модераторы
             self.permission_classes = [IsAuthenticated, ~IsModer]
+        elif self.action == "list":
+            # Просматривать курсы могут только владельцы или модераторы
+            self.permission_classes = [IsAuthenticated, IsOwner | IsModer]
         elif self.action in ["update", "partial_update", "retrieve"]:
             # Смотреть и редактировать могут владельцы ИЛИ модераторы
             self.permission_classes = [IsAuthenticated, IsOwner | IsModer]
