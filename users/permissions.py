@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class IsModer(permissions.BasePermission):
     """Permission для проверки принадлежности пользователя к группе модераторов.
 
@@ -8,4 +9,14 @@ class IsModer(permissions.BasePermission):
     группе, доступ запрещается."""
     def has_permission(self, request, view):
         """Проверяет право доступа пользователя к представлению."""
-        return request.user.groups.filter(name="moderators").exists()
+        return request.user.is_authenticated and request.user.groups.filter(name="moderators").exists()
+
+
+class IsOwner(permissions.BasePermission):
+    """Проверяет, является ли пользователь владельцем."""
+    def has_object_permission(self, request, view, obj):
+
+        if obj.owner == request.user:
+            """Проверяет право доступа к конкретному объекту."""
+            return True
+        return False
