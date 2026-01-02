@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.validators import URLValidator
 
 
@@ -20,6 +20,13 @@ class CourseSerializer(ModelSerializer):
     """Сериализатор для модели Course (курс).
     Преобразует объекты курсов в JSON и обратно для API.
     Включает все поля модели, включая связанные уроки."""
+
+    # получаем признак подписки пользователя на курс
+    is_subscribed = SerializerMethodField()
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return Subscription.objects.filter(user=user, course=obj).exists()
 
     class Meta:
         """Метаданные сериализатора курса."""
@@ -41,6 +48,13 @@ class CourseDetailSerializer(ModelSerializer):
     lessons = LessonSerializer(source='lesson_set', many=True, read_only=True)
     count_lessons = SerializerMethodField()
 
+    # получаем признак подписки пользователя на курс
+    is_subscribed = SerializerMethodField()
+
+    def get_is_subscribed(self, obj):
+        user = self.context['request'].user
+        return Subscription.objects.filter(user=user, course=obj).exists()
+
     def get_count_lessons(self, course):
         """Возвращает количество уроков в курсе."""
         return course.lesson_set.count()
@@ -48,4 +62,15 @@ class CourseDetailSerializer(ModelSerializer):
     class Meta:
         """Метаданные сериализатора курса."""
         model = Course
-        fields = ("name", "lessons", "count_lessons")
+        fields = ("name", "lessons", "count_lessons", 'is_subscribed')
+
+
+class SubscriptionSerializer(ModelSerializer):
+    """Сериализатор для модели подписки на курс.
+
+    Преобразует объекты подписки на курс в JSON и обратно для API."""
+
+    class Meta:
+        model = Subscription
+        fields = "__all__"
+        read_only_fields = ("user", "created_at")

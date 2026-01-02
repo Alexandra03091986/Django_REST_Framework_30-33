@@ -98,6 +98,10 @@ class Subscription(models.Model):
         verbose_name="Курс",
         help_text="Укажите курс"
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания"
+    )
 
     class Meta:
         verbose_name = "Подписка"
