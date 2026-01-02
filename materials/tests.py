@@ -10,13 +10,17 @@ from users.models import User
 class LessonTestCase(APITestCase):
     """Тесты для CRUD операций с уроками."""
     def setUp(self):
+        """Настройка тестовых данных для тестов уроков.
+        Создает пользователя, курс и урок для тестирования."""
         self.user = User.objects.create(email="email_test@test.com")
         self.course = Course.objects.create(name="Test-course", owner=self.user)
         self.lesson = Lesson.objects.create(name="Test-lesson", course=self.course, owner=self.user)
         self.client.force_authenticate(user=self.user)
         # Создаем валидатор для тестирования
         self.validator = URLValidator(field="video_url")
+
     def test_lesson_retrieve(self):
+        """Тест получения детальной информации об уроке."""
         url = reverse("materials:lessons_retrieve", args=(self.lesson.pk,))
         response = self.client.get(url)
         data = response.json()
@@ -29,6 +33,7 @@ class LessonTestCase(APITestCase):
         )
 
     def test_lesson_create(self):
+        """Тест создания нового урока."""
         url = reverse("materials:lessons_create")
         data = {
             "name": "Test-lesson2",
@@ -45,6 +50,7 @@ class LessonTestCase(APITestCase):
         )
 
     def test_lesson_create_not_valid(self):
+        """Тест создания урока с невалидным видео URL."""
         url = reverse("materials:lessons_create")
         data = {
             "name": "Урок с VK видео",
@@ -83,6 +89,7 @@ class LessonTestCase(APITestCase):
         )
 
     def test_lesson_update(self):
+        """Тест обновления существующего урока."""
         url = reverse("materials:lessons_update", args=(self.lesson.pk,))
         data = {
             "name": "Test-lesson2-new"
@@ -98,6 +105,7 @@ class LessonTestCase(APITestCase):
         )
 
     def test_lesson_delete(self):
+        """Тест удаления урока."""
         url = reverse("materials:lessons_delete", args=(self.lesson.pk,))
         response = self.client.delete(url)
         self.assertEqual(
@@ -110,6 +118,7 @@ class LessonTestCase(APITestCase):
         )
 
     def test_lesson_list(self):
+        """Тест получения списка уроков с пагинацией."""
         url = reverse("materials:lessons_list")
         response = self.client.get(url)
         data = response.json()
@@ -144,14 +153,18 @@ class LessonTestCase(APITestCase):
 
 
 class CourseTestCase(APITestCase):
-    """Тесты для CRUD операций с лекциями."""
+    """Тесты для CRUD операций с курсами."""
     def setUp(self):
+        """Настройка тестовых данных для тестов курсов.
+        Создает пользователя, курс и урок для тестирования.
+        """
         self.user = User.objects.create(email="email_test@test.com")
         self.course = Course.objects.create(name="Test-course", owner=self.user)
         self.lesson = Lesson.objects.create(name="Test-lesson", course=self.course, owner=self.user)
         self.client.force_authenticate(user=self.user)
 
     def test_course_retrieve(self):
+        """Тест получения детальной информации о курсе."""
         url = reverse("materials:course-detail", args=(self.course.pk,))
         response = self.client.get(url)
         data = response.json()
@@ -164,6 +177,7 @@ class CourseTestCase(APITestCase):
         )
 
     def test_course_create(self):
+        """Тест создания нового курса."""
         url = reverse("materials:course-list")
         data = {
             "name": "Test-course",
@@ -179,8 +193,8 @@ class CourseTestCase(APITestCase):
             2
         )
 
-
     def test_course_update(self):
+        """Тест обновления существующего курса."""
         url = reverse("materials:course-detail", args=(self.course.pk,))
         data = {
             "name": "Test-lesson2-new"
@@ -196,6 +210,7 @@ class CourseTestCase(APITestCase):
         )
 
     def test_course_delete(self):
+        """Тест удаления курса."""
         url = reverse("materials:course-detail", args=(self.course.pk,))
         response = self.client.delete(url)
         self.assertEqual(
@@ -208,6 +223,7 @@ class CourseTestCase(APITestCase):
         )
 
     def test_course_list(self):
+        """Тест получения списка курсов с пагинацией."""
         url = reverse("materials:course-list")
         response = self.client.get(url)
         data = response.json()
@@ -244,12 +260,14 @@ class CourseTestCase(APITestCase):
 class SubscriptionTestCase(APITestCase):
     """Тесты для функционала подписок на курсы."""
     def setUp(self):
+        """Настройка тестовых данных для тестов подписок.
+        Создает пользователя и курс для тестирования подписок."""
         self.user = User.objects.create(email="email_test@test.com")
         self.course = Course.objects.create(name="Test-course", owner=self.user)
         self.client.force_authenticate(user=self.user)
 
     def test_subscription_create(self):
-        """Тест создания подписки."""
+        """Тест создания подписки на курс."""
         url = reverse("materials:subscriptions")
         data = {
             "course_id": self.course.pk
