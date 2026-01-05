@@ -6,10 +6,7 @@ stripe.api_key = STRIPE_API_KEY
 def create_stripe_product(product):
     """ Создаёт продукт в Stripe. """
     try:
-        stripe_product = stripe.Product.create(
-            name=product.name,
-            description=product.description
-        )
+        stripe_product = stripe.Product.create(name=product)
         return stripe_product
     except stripe.error.StripeError as e:
         print(f"Произошла ошибка при создании продукта: {e}")
@@ -35,4 +32,3 @@ def create_stripe_sessions(price):
         mode="payment",
     )
     return session.get("id"), session.get("url")
-

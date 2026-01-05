@@ -39,7 +39,7 @@ class User(AbstractUser):
 
 
 class Payments(models.Model):
-    """Модель платежи"""
+    """Модель для хранения информации о платежах."""
 
     user = models.ForeignKey(
         User,
