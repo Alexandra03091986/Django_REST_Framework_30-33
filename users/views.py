@@ -8,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 from users.models import Payments, User
 from users.serializers import (PaymentsSerializer, UserHistoryPaymentsSerializer, UserRegistrationSerializer,
                                UserSerializer)
-from users.services import create_stripe_product, create_stripe_price, create_stripe_sessions
+from users.services import create_stripe_price, create_stripe_product, create_stripe_sessions
 
 
 class PaymentViewSet(ModelViewSet):
