@@ -143,8 +143,20 @@ CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 # CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
-    'task-name': {
-        'task': 'myapp.tasks.my_task',  # Путь к задаче
-        'schedule': timedelta(minutes=10),  # Расписание выполнения задачи (например, каждые 10 минут)
+    "send_email_about_update_the_course_materials": {
+        "task": "materials.tasks.send_email_about_update_the_course_materials",  # Путь к задаче
+        "schedule": timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
     },
 }
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
