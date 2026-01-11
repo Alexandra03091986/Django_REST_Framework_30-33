@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -133,6 +134,7 @@ STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ENABLE_UTC = True
 
 # URL-адрес брокера сообщений
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL") # Например, Redis, который по умолчанию работает на порту 6379
@@ -140,13 +142,11 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL") # Например, Redis, к
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 
-# CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-
 CELERY_BEAT_SCHEDULE = {
-    "send_email_about_update_the_course_materials": {
-        "task": "materials.tasks.send_email_about_update_the_course_materials",  # Путь к задаче
-        "schedule": timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
-    },
+    "block_inactive_users": {
+        "task": "materials.tasks.block_inactive_users",
+        "schedule": crontab(hour=0, minute=0),  # Запускать ежедневно в полночь
+    }
 }
 
 EMAIL_HOST = os.getenv("EMAIL_HOST")
