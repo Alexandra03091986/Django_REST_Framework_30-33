@@ -12,12 +12,12 @@ from users.models import User
 def send_email_about_update_the_course_materials(email, subject, message):
     """Асинхронная рассылка писем всем подписчикам курса об обновлении."""
     send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+        subject=subject,
+        message=message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[email],
+        fail_silently=False,
+    )
 
 
 @shared_task

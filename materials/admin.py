@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Course, Lesson, Subscription
 
 
@@ -18,4 +19,3 @@ class LessonAdmin(admin.ModelAdmin):
 class SubscriptionAdmin(admin.ModelAdmin):
     """Настройки отображения модели Subscription в админке"""
     list_display = ('id', 'user', 'course', 'is_active', 'created_at')
-

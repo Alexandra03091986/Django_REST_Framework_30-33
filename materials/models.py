@@ -90,6 +90,7 @@ class Lesson(models.Model):
     def __str__(self):
         return self.name
 
+
 class Subscription(models.Model):
     """Модель подписки на курс"""
     user = models.ForeignKey(

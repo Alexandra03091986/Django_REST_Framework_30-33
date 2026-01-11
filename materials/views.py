@@ -1,5 +1,4 @@
 from typing import Type
-from materials.tasks import send_email_about_update_the_course_materials
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -14,6 +13,7 @@ from rest_framework.viewsets import ModelViewSet
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CourseLessonPagination
 from materials.serializers import CourseDetailSerializer, CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.tasks import send_email_about_update_the_course_materials
 from users.permissions import IsModer, IsOwner
 
 
