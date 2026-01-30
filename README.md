@@ -1,7 +1,8 @@
 ## 🎓 Проект: Платформа онлайн-обучения
 
 ### 📋 Описание проекта
-Django-проект образовательной платформы с REST API для управления курсами и уроками. Проект использует Django REST Framework для создания API и включает кастомную модель пользователя с авторизацией по email. Проект реализует полный CRUD для образовательного контента с расширенными возможностями фильтрации и отчетности.
+Django-проект образовательной платформы с REST API для управления курсами и уроками. Проект использует Django REST Framework для создания API и включает 
+кастомную модель пользователя с авторизацией по email. Проект реализует полный CRUD для образовательного контента с расширенными возможностями фильтрации и отчетности.
 
 
 ### 🛠 Технологический стек
@@ -15,6 +16,123 @@ Django-проект образовательной платформы с REST AP
 * Celery
 
 ### 📁 Структура проекта
+
+### 🚀 Быстрый старт
+**Требования**
+* Docker
+
+* Docker Compose
+
+* Git
+
+### Запуск проекта
+1. Клонируйте репозиторий:
+
+```git clone https://github.com/Alexandra03091986/Django_REST_Framework_30-33/pull/7 cd Django_REST_Framework_30-33``` 
+
+2. Создайте файл окружения:
+
+```cp .env.example .env```
+
+⚙️ Настройка окружения
+Создайте файл .env на основе .env.example, указав свои настройки
+
+3. Запустите проект:
+``docker-compose up --build``
+
+***Примечание:*** Для первого запуска может потребоваться время на сборку образов и применение миграций.
+
+Проверьте статус сервисов:
+
+```docker-compose ps```
+
+4. Проект будет доступен по адресу:
+
+- Django: http://localhost:8000
+
+- API документация: http://localhost:8000/swagger/
+
+- Админка: http://localhost:8000/admin/
+
+### 🔧 Сервисы
+Проект состоит из 5 сервисов:
+1. Web (Django) - основной сервис, который запускает Django-приложение.
+* Порт: 8000
+
+* URL: http://localhost:8000
+
+* Команда проверки: curl http://localhost:8000/
+
+### Выполнить команду в контейнере web
+```docker-compose exec web python manage.py [command]```
+
+2. PostgreSQL (База данных)
+* Порт: 5432
+
+* Проверка: ```docker-compose exec postgres pg_isready -U postgres```
+
+3. Redis (Кэш и брокер для Celery)
+* Порт: 6379
+
+* Проверка: ```docker-compose exec redis redis-cli ping```
+
+Должен ответить: ПОНГ
+
+4. Celery (Фоновые задачи)
+Проверка: ```docker-compose exec celery celery -A config status```
+
+5. Celery Beat (Планировщик задач)
+Проверка: ```docker-compose logs celery-beat```
+
+## 🛠 Команды управления
+
+### Запуск и остановка
+
+    # Запуск в фоновом режиме
+    docker-compose up -d
+    
+    # Остановка
+    docker-compose down
+    
+    # Пересборка и запуск
+    docker-compose up --build -d
+    
+    # Перезапуск всех
+    docker-compose restart
+    
+    # Просмотр логов
+    docker-compose logs -f [service_name]
+
+### 🔍 Мониторинг
+#### Просмотр логов
+#### Все логи
+    docker-compose logs
+
+#### Логи конкретного сервиса
+    docker-compose logs web
+    docker-compose logs postgres
+    docker-compose logs celery
+
+### Проверка сети
+
+#### Проверить подключение между контейнерами
+    docker-compose exec web ping postgres
+    docker-compose exec web ping redis
+
+### 🗑️ Очистка
+#### Остановить и удалить контейнеры
+    docker-compose down
+
+##### Остановить и удалить контейнеры с volumes
+    docker-compose down -v
+
+### 📚 Документация API
+**После запуска проекта доступна автоматическая документация:**
+
+- Swagger UI: http://localhost:8000/swagger/
+
+- ReDoc: http://localhost:8000/redoc/
+
 
 
 ### Приложения
@@ -113,17 +231,3 @@ Django-проект образовательной платформы с REST AP
 * Все эндпоинты проверены через Postman
 * Протестированы все CRUD-операции
 * Проверены связи между моделями
-
-Установка и запуск
-1. Клонирование репозитория
-2. Создание виртуального окружения и установка зависимостей
-3. Настройка базы данных
-    - Создание и применение миграций
-    ```python manage.py makemigrations```
-    ```python manage.py migrate```
-4. Загрузка тестовых данных
-   - Вариант 2: Загрузка фикстур
-   ```python manage.py loaddata users_data.json materials_data.json payments_data.json```
-5. Запуск сервера
-```python manage.py runserver```
-6. 
