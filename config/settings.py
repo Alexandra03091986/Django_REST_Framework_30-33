@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -113,10 +113,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+# Настройка статических файлов
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Куда собирать статику
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Где искать статику
+]
 
-
+# Настройка медиафайлов
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
