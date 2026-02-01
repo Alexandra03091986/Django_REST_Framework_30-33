@@ -121,8 +121,8 @@ jobs:
          username: ${{ secrets.SSH_USER_SERVER }}
          key: ${{ secrets.SSH_PRIVATE_KEY }}
          script: |
-           docker stop online_work || true
-           docker rm online_work || true
-           docker run -d --name online_work -p 80:8000 \
+           docker stop drf-online-platform || true
+           docker rm drf-online-platform || true
+           docker run -d --name drf-online-platform -p 80:8000 \
             --env-file ~/myproject/.env \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
