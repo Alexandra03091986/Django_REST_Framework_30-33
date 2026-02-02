@@ -36,18 +36,20 @@ jobs:
 #          poetry install --no-interaction --no-ansi --no-root
       - name: Install dependencies with Poetry export
         run: |
-          # Устанавливаем Poetry 1.8.3
-          pip install poetry==1.8.3
+          # Устанавливаем Poetry
+          pip install poetry==${{ env.POETRY_VERSION }}
           
           # Экспортируем зависимости
           poetry export -f requirements.txt --output requirements.txt --without-hashes --with dev
           
           # Устанавливаем через pip
           pip install -r requirements.txt
+          pip install flake8
       # Запускаем проверку кода через flake8
       - name: Run flake8
         run: |
-          poetry run flake8 .
+          flake8 .
+#          poetry run flake8 .
 
   # Запуск тестов (после успешного прохождения линтеров)
   test:
