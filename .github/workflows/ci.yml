@@ -81,7 +81,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --with dev
+        poetry install --no-root
+#        poetry install --no-interaction --no-ansi --with dev
 
     # Устанавливаем зависимости для тестирования
     - name: Set up environment variables for tests
@@ -93,7 +94,7 @@ jobs:
     # Выполняем миграции
     - name: Run migrations
       run: |
-        python manage.py test --verbosity=2
+        python manage.py migrate --noinput
 #        poetry run python manage.py migrate --noinput
 
     # Запускаем тесты
