@@ -29,12 +29,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry==${{ env.POETRY_VERSION }}
 
-      # Устанавливаем зависимости и выполняем linting
-      - name: Install dependencies with Poetry
+#      # Устанавливаем зависимости и выполняем linting
+#      - name: Install dependencies with Poetry
+#        run: |
+#          poetry config virtualenvs.create false
+#          poetry install --no-interaction --no-ansi --no-root
+      - name: Install dependencies with Poetry export
         run: |
-          poetry config virtualenvs.create false
-          poetry install --no-interaction --no-ansi --no-root
-
+          # Устанавливаем Poetry 1.8.3
+          pip install poetry==1.8.3
+          
+          # Экспортируем зависимости
+          poetry export -f requirements.txt --output requirements.txt --without-hashes --with dev
+          
+          # Устанавливаем через pip
+          pip install -r requirements.txt
       # Запускаем проверку кода через flake8
       - name: Run flake8
         run: |
