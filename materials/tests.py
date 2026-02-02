@@ -239,7 +239,8 @@ class CourseTestCase(APITestCase):
                     'name': self.course.name,
                     'picture': None,
                     'description': None,
-                    'owner': self.user.id
+                    'owner': self.user.id,
+                    # 'updated_at': data['results'][0]['updated_at']
                 }
             ]
         }

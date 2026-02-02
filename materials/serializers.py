@@ -31,7 +31,7 @@ class CourseSerializer(ModelSerializer):
     class Meta:
         """Метаданные сериализатора курса."""
         model = Course
-        fields = "__all__"
+        fields = ['id', 'name', 'picture', 'description', 'owner', 'is_subscribed']
 
 
 class CourseDetailSerializer(ModelSerializer):
