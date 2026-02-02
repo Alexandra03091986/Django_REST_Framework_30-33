@@ -117,15 +117,16 @@ jobs:
 
       # Авторизуемся в Docker Hub используя секреты
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       # Собираем Docker-образ с тегом на основе последнего коммита
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }} .
 
       # Отправляем собранный Docker-образ в Docker Hub
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/online_work:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
 
   # Отправка Docker-образа на сервер
   deploy:
