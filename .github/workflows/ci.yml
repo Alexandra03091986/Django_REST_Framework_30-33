@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 env:
   PYTHON_VERSION: "3.13"
-  POETRY_VERSION: "1.8.3"
 #     SECRET_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 #     ANOTHER_VAR: value
 
@@ -23,28 +22,24 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      # Устанавливаем Poetry нужной версии
-      - name: Install Poetry
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry==${{ env.POETRY_VERSION }}
+#      # Устанавливаем Poetry нужной версии
+#      - name: Install Poetry
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install poetry==${{ env.POETRY_VERSION }}
 
 #      # Устанавливаем зависимости и выполняем linting
 #      - name: Install dependencies with Poetry
 #        run: |
 #          poetry config virtualenvs.create false
 #          poetry install --no-interaction --no-ansi --no-root
-      - name: Install dependencies with Poetry export
+      - name: Install dependencies
         run: |
-          # Устанавливаем Poetry
-          pip install poetry==${{ env.POETRY_VERSION }}
-          
-          # Экспортируем зависимости
-          poetry export -f requirements.txt --output requirements.txt --without-hashes --with dev
-          
-          # Устанавливаем через pip
+          python -m pip install --upg
           pip install -r requirements.txt
           pip install flake8
+          
+
       # Запускаем проверку кода через flake8
       - name: Run flake8
         run: |
