@@ -94,9 +94,9 @@ jobs:
         echo "DEBUG=False" >> $GITHUB_ENV
 
     # Выполняем миграции
-    - name: Run migrations
-      run: |
-        python manage.py migrate --noinput
+#    - name: Run migrations
+#      run: |
+#        python manage.py migrate --noinput
 #        poetry run python manage.py migrate --noinput
 
     # Запускаем тесты
