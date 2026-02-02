@@ -16,9 +16,9 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: ${NAME:-education_platform}
-      POSTGRES_USER: ${USER:-postgres}
-      POSTGRES_PASSWORD: ${PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-education_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -44,8 +44,9 @@ services:
       retries: 5
 
   web:
-    build: .
-    container_name: django_app_new
+#    build: .
+    image: alexandraandryshchenko/drf-online-platform:965349cbfaff1dbdaa20d10d60f372dea063aa9d
+    container_name: drf-online-platform  # или оставить django_app_new
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - static_volume:/app/static/
