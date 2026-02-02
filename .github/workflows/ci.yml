@@ -32,7 +32,7 @@ jobs:
       # Устанавливаем зависимости и выполняем linting
       - name: Install dependencies with Poetry
         run: |
-          poetry config virtualenvs.create false
+          poetry config virtualenvs.create false --local
           poetry install --no-interaction --no-ansi
 
       # Запускаем проверку кода через flake8
