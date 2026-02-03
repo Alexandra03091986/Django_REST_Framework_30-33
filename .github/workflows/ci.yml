@@ -127,18 +127,18 @@ jobs:
         uses: appleboy/ssh-action@v0.1.10
         # Параметры подключения
         with:
-         host: ${{ secrets.SERVER_IP }}
-         username: ${{ secrets.SSH_USER_SERVER }}
-         key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER_SERVER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
          # Остановка существующего контейнера
          # Удаление контейнера
          # Запуск нового контейнера
-         script: |
+          script: |
 #           # Используем .env файл из правильной директории проекта
 #           ENV_FILE="/var/www/drf-online-platform/.env"
            
-           docker stop drf-online-platform || true
-           docker rm -f drf-online-platform || true
-           docker run -d --name drf-online-platform -p 80:8000 \
-            --env-file ~/myproject/.env \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
+             docker stop drf-online-platform || true
+             docker rm -f drf-online-platform || true
+             docker run -d --name drf-online-platform -p 80:8000 \
+              --env-file ~/myproject/.env \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
