@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 env:
   PYTHON_VERSION: "3.13"
+  DOCKER_IMAGE_NAME: "drf-online-platform"
 
 jobs:
   lint:
@@ -130,15 +131,15 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USER_SERVER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-         # Остановка существующего контейнера
-         # Удаление контейнера
-         # Запуск нового контейнера
+          # Остановка существующего контейнера
+          # Удаление контейнера
+          # Запуск нового контейнера
           script: |
 #           # Используем .env файл из правильной директории проекта
 #           ENV_FILE="/var/www/drf-online-platform/.env"
 
-             docker stop drf-online-platform || true
-             docker rm -f drf-online-platform || true
-             docker run -d --name drf-online-platform -p 80:8000 \
+             docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+             docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+             docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
               --env-file ~/myproject/.env \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
+              ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
