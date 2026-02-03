@@ -14,15 +14,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-
-# DEBUG = os.getenv('DEBUG', 'True') == 'True'
-if os.path.exists('.env.dev') or 'DEV_MODE' in os.environ:
-    DEBUG = True
-else:
-    DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True if os.getenv('DEBUG') == 'True' else False
+# if os.path.exists('.env.dev') or 'DEV_MODE' in os.environ:
+#     DEBUG = True
+# else:
+#     DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web', 'nginx']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web', 'nginx', '158.160.154.174',]
 
 AUTH_USER_MODEL = "users.User"
 
@@ -154,6 +153,7 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 
+CELERY_BEAT_SCHEDULER = 'celery.beat:PersistentScheduler'
 CELERY_BEAT_SCHEDULE = {
     "block_inactive_users": {
         "task": "materials.tasks.block_inactive_users",
@@ -180,11 +180,11 @@ if "test" in sys.argv:
             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),  # Используем SQLite для тестирования
         }
     }
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 # Настройки для работы за прокси
 USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # CSRF настройки для Docker
 CSRF_TRUSTED_ORIGINS = [

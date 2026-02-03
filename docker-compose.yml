@@ -49,11 +49,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#    image: alexandraandryshchenko/drf-online-platform:965349cbfaff1dbdaa20d10d60f372dea063aa9d
-    container_name: drf-online-platform  # или оставить django_app_new
+    container_name: drf-online-platform
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - static_volume:/app/static/
+      - static_volume:/app/staticfiles/
       - media_volume:/app/media/
       - .:/app
     ports:
@@ -87,19 +86,19 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: education_platform_celery_beat
-    command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    volumes:
-      - media_volume:/app/media/
-      - .:/app
+    command: celery -A config beat --loglevel=info
+#    volumes:
+#      - media_volume:/app/media/
+#      - .:/app
     env_file:
       - ./.env
     depends_on:
       - redis
       - db
       - web  # Ждем backend для применения миграций
-
-networks:
-  default:
+#
+#networks:
+#  default:
 
 volumes:
   postgres_data:
