@@ -136,7 +136,7 @@ jobs:
           script: |
 #           # Используем .env файл из правильной директории проекта
 #           ENV_FILE="/var/www/drf-online-platform/.env"
-           
+
              docker stop drf-online-platform || true
              docker rm -f drf-online-platform || true
              docker run -d --name drf-online-platform -p 80:8000 \
