@@ -140,13 +140,8 @@ jobs:
           username: ${{ secrets.SSH_USER_SERVER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/alexandra/drf_projects/drf-app-30
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
-
-#            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
-#            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-#            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-#            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
-#            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
+            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
