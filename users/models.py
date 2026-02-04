@@ -52,14 +52,14 @@ class Payments(models.Model):
         verbose_name="Дата платежа",
     )
     course_paid = models.ForeignKey(
-        'materials.Course',
+        "materials.Course",
         on_delete=models.CASCADE,
         verbose_name="Оплаченный курс",
         null=True,
         blank=True,
     )
     lesson_paid = models.ForeignKey(
-        'materials.Lesson',
+        "materials.Lesson",
         on_delete=models.CASCADE,
         verbose_name="Оплаченный урок",
         null=True,

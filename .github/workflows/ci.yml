@@ -110,20 +110,18 @@ jobs:
 
       # Собираем Docker-образ с тегом на основе последнего коммита
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
 
       # Отправляем собранный Docker-образ в Docker Hub
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/drf-online-platform:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
 
   # Отправка Docker-образа на сервер
-  deploy:
-    # деплоим только после успешного Docker-образа
+  deploy:  # деплоим только после успешного Docker-образа
     needs: build
     runs-on: ubuntu-latest
 
-    steps:
-      # Подключение к серверу. Запускает новую версию из свежего Docker-образа
+    steps:  # Подключение к серверу. Запускает новую версию из свежего Docker-образа
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.10
         # Параметры подключения
@@ -131,15 +129,10 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USER_SERVER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Остановка существующего контейнера
-          # Удаление контейнера
-          # Запуск нового контейнера
           script: |
-#           # Используем .env файл из правильной директории проекта
-#           ENV_FILE="/var/www/drf-online-platform/.env"
 
-             docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
-             docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-             docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-              --env-file ~/myproject/.env \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
+            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}

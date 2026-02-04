@@ -9,6 +9,7 @@ from users.models import User
 
 class LessonTestCase(APITestCase):
     """Тесты для CRUD операций с уроками."""
+
     def setUp(self):
         """Настройка тестовых данных для тестов уроков.
         Создает пользователя, курс и урок для тестирования."""
@@ -24,30 +25,16 @@ class LessonTestCase(APITestCase):
         url = reverse("materials:lessons_retrieve", args=(self.lesson.pk,))
         response = self.client.get(url)
         data = response.json()
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data.get("name"), self.lesson.name
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("name"), self.lesson.name)
 
     def test_lesson_create(self):
         """Тест создания нового урока."""
         url = reverse("materials:lessons_create")
-        data = {
-            "name": "Test-lesson2",
-            "course": self.course.pk
-        }
+        data = {"name": "Test-lesson2", "course": self.course.pk}
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_201_CREATED
-        )
-        self.assertEqual(
-            Lesson.objects.all().count(),
-            2
-        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Lesson.objects.all().count(), 2)
 
     def test_lesson_create_not_valid(self):
         """Тест создания урока с невалидным видео URL."""
@@ -56,17 +43,11 @@ class LessonTestCase(APITestCase):
             "name": "Урок с VK видео",
             "description": "Описание",
             "video_url": "https://www.vk.ru/video123",  # Не YouTube!
-            "course": self.course.id
+            "course": self.course.id,
         }
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_400_BAD_REQUEST
-        )
-        self.assertEqual(
-            Lesson.objects.all().count(),
-            1
-        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Lesson.objects.all().count(), 1)
 
     def test_lesson_create_with_valid_youtube_url(self):
         """Создание урока с валидным YouTube URL."""
@@ -75,47 +56,28 @@ class LessonTestCase(APITestCase):
             "name": "Урок с YouTube",
             "description": "Описание урока",
             "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            "course": self.course.id
+            "course": self.course.id,
         }
         response = self.client.post(url, data)
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_201_CREATED
-        )
-        self.assertEqual(
-            Lesson.objects.count(),
-            2
-        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Lesson.objects.count(), 2)
 
     def test_lesson_update(self):
         """Тест обновления существующего урока."""
         url = reverse("materials:lessons_update", args=(self.lesson.pk,))
-        data = {
-            "name": "Test-lesson2-new"
-        }
+        data = {"name": "Test-lesson2-new"}
         response = self.client.patch(url, data)
         data = response.json()
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data.get("name"), "Test-lesson2-new"
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("name"), "Test-lesson2-new")
 
     def test_lesson_delete(self):
         """Тест удаления урока."""
         url = reverse("materials:lessons_delete", args=(self.lesson.pk,))
         response = self.client.delete(url)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_204_NO_CONTENT
-        )
-        self.assertEqual(
-            Lesson.objects.all().count(),
-            0
-        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Lesson.objects.all().count(), 0)
 
     def test_lesson_list(self):
         """Тест получения списка уроков с пагинацией."""
@@ -123,37 +85,29 @@ class LessonTestCase(APITestCase):
         response = self.client.get(url)
         data = response.json()
         result = {
-            'count': 1,
-            'next': None,
-            'previous': None,
-            'results': [
+            "count": 1,
+            "next": None,
+            "previous": None,
+            "results": [
                 {
-                    'id': self.lesson.id,
-                    'name': self.lesson.name,
-                    'description': None,
-                    'picture': None,
-                    'video_url': None,
-                    'course': self.course.id,
-                    'owner': self.user.id
+                    "id": self.lesson.id,
+                    "name": self.lesson.name,
+                    "description": None,
+                    "picture": None,
+                    "video_url": None,
+                    "course": self.course.id,
+                    "owner": self.user.id,
                 }
-            ]
+            ],
         }
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data,
-            result
-        )
-        self.assertEqual(
-            response.data['results'][0]['name'],
-            self.lesson.name
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data, result)
+        self.assertEqual(response.data["results"][0]["name"], self.lesson.name)
 
 
 class CourseTestCase(APITestCase):
     """Тесты для CRUD операций с курсами."""
+
     def setUp(self):
         """Настройка тестовых данных для тестов курсов.
         Создает пользователя, курс и урок для тестирования.
@@ -168,59 +122,32 @@ class CourseTestCase(APITestCase):
         url = reverse("materials:course-detail", args=(self.course.pk,))
         response = self.client.get(url)
         data = response.json()
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data.get("name"), self.course.name
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("name"), self.course.name)
 
     def test_course_create(self):
         """Тест создания нового курса."""
         url = reverse("materials:course-list")
-        data = {
-            "name": "Test-course",
-            "course": self.course.pk
-        }
+        data = {"name": "Test-course", "course": self.course.pk}
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_201_CREATED
-        )
-        self.assertEqual(
-            Course.objects.all().count(),
-            2
-        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Course.objects.all().count(), 2)
 
     def test_course_update(self):
         """Тест обновления существующего курса."""
         url = reverse("materials:course-detail", args=(self.course.pk,))
-        data = {
-            "name": "Test-lesson2-new"
-        }
+        data = {"name": "Test-lesson2-new"}
         response = self.client.patch(url, data)
         data = response.json()
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data.get("name"), "Test-lesson2-new"
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("name"), "Test-lesson2-new")
 
     def test_course_delete(self):
         """Тест удаления курса."""
         url = reverse("materials:course-detail", args=(self.course.pk,))
         response = self.client.delete(url)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_204_NO_CONTENT
-        )
-        self.assertEqual(
-            Course.objects.count(),
-            0
-        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Course.objects.count(), 0)
 
     def test_course_list(self):
         """Тест получения списка курсов с пагинацией."""
@@ -229,37 +156,29 @@ class CourseTestCase(APITestCase):
         data = response.json()
 
         result = {
-            'count': 1,
-            'next': None,
-            'previous': None,
-            'results': [
+            "count": 1,
+            "next": None,
+            "previous": None,
+            "results": [
                 {
-                    'id': self.course.id,
-                    'is_subscribed': False,
-                    'name': self.course.name,
-                    'picture': None,
-                    'description': None,
-                    'owner': self.user.id,
+                    "id": self.course.id,
+                    "is_subscribed": False,
+                    "name": self.course.name,
+                    "picture": None,
+                    "description": None,
+                    "owner": self.user.id,
                     # 'updated_at': data['results'][0]['updated_at']
                 }
-            ]
+            ],
         }
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            data,
-            result
-        )
-        self.assertEqual(
-            response.data['results'][0]['name'],
-            self.course.name
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data, result)
+        self.assertEqual(response.data["results"][0]["name"], self.course.name)
 
 
 class SubscriptionTestCase(APITestCase):
     """Тесты для функционала подписок на курсы."""
+
     def setUp(self):
         """Настройка тестовых данных для тестов подписок.
         Создает пользователя и курс для тестирования подписок."""
@@ -270,27 +189,14 @@ class SubscriptionTestCase(APITestCase):
     def test_subscription_create(self):
         """Тест создания подписки на курс."""
         url = reverse("materials:subscriptions")
-        data = {
-            "course_id": self.course.pk
-        }
+        data = {"course_id": self.course.pk}
         # Создаем подписку
         response = self.client.post(url, data)
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
-        self.assertEqual(
-            response.data["message"],
-            "подписка добавлена"
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["message"], "подписка добавлена")
         # Проверяем, что подписка создалась в БД
-        self.assertEqual(
-            Subscription.objects.filter(
-                user=self.user,
-                course=self.course
-            ).count(),
-            1)
+        self.assertEqual(Subscription.objects.filter(user=self.user, course=self.course).count(), 1)
 
     def test_subscription_delete(self):
         """Тест удаления подписки (отписки)."""
@@ -304,27 +210,15 @@ class SubscriptionTestCase(APITestCase):
 
         # Удаляем подписку
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.data["message"],
-            "подписка удалена"
-        )
+        self.assertEqual(response.data["message"], "подписка удалена")
 
         # Проверяем, что подписки нет в БД
-        self.assertEqual(
-            Subscription.objects.count(),
-            0
-        )
+        self.assertEqual(Subscription.objects.count(), 0)
 
     def test_subscription_create_without_course_id(self):
         """Тест создания подписки без course_id (должна быть ошибка 400)."""
         url = reverse("materials:subscriptions")
         data = {}
         response = self.client.post(url, data)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_400_BAD_REQUEST
-        )
-        self.assertEqual(
-            response.data["error"],
-            "course_id обязателен"
-        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["error"], "course_id обязателен")

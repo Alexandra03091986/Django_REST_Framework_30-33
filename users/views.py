@@ -6,8 +6,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import Payments, User
-from users.serializers import (PaymentsSerializer, UserHistoryPaymentsSerializer, UserRegistrationSerializer,
-                               UserSerializer)
+from users.serializers import (
+    PaymentsSerializer,
+    UserHistoryPaymentsSerializer,
+    UserRegistrationSerializer,
+    UserSerializer,
+)
 from users.services import create_stripe_price, create_stripe_product, create_stripe_sessions
 
 
@@ -16,21 +20,22 @@ class PaymentViewSet(ModelViewSet):
     1. Сортировка по дате оплаты (ordering)
     2. Фильтрация по курсу или уроку
     3. Фильтрация по способу оплаты"""
+
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ['course_paid', 'lesson_paid', 'method_payment']
-    ordering_fields = ['date_payment']
+    filterset_fields = ["course_paid", "lesson_paid", "method_payment"]
+    ordering_fields = ["date_payment"]
     # Сортировка по умолчанию (новые первыми)
-    ordering = ['-date_payment']
+    ordering = ["-date_payment"]
 
 
 class PaymentsCreateAPIView(CreateAPIView):
-
-    """ API View для создания платежей через Stripe.
+    """API View для создания платежей через Stripe.
 
     Этот View обрабатывает создание платежей для курсов или уроков."""
+
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
 
@@ -58,9 +63,7 @@ class PaymentsCreateAPIView(CreateAPIView):
             product_name = lesson.name
         else:
             # Если ни курс, ни урок не указаны - выбрасываем ошибку
-            raise serializers.ValidationError(
-                "Необходимо указать курс или урок для оплаты"
-            )
+            raise serializers.ValidationError("Необходимо указать курс или урок для оплаты")
         # Создаем продукт в Stripe
         product = create_stripe_product(product_name)
 
@@ -75,15 +78,17 @@ class PaymentsCreateAPIView(CreateAPIView):
 
 class UserViewSet(ModelViewSet):
     """ViewSet для пользователя"""
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserRegistration(CreateAPIView):
     """APIView для создания пользователя"""
+
     serializer_class = UserRegistrationSerializer
     queryset = User.objects.all()
-    permission_classes = (AllowAny,)    # разрешает доступ всем пользователям, включая анонимных.
+    permission_classes = (AllowAny,)  # разрешает доступ всем пользователям, включая анонимных.
 
     def perform_create(self, serializer):
         user = serializer.save(is_active=True)
@@ -98,4 +103,4 @@ class UserHistoryPaymentsViewSet(ModelViewSet):
 
     def get_queryset(self) -> QuerySet[User]:
         # Предзагрузка платежей пользователя для оптимизации запросов
-        return User.objects.prefetch_related('payments_set')
+        return User.objects.prefetch_related("payments_set")
