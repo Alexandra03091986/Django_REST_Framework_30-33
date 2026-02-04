@@ -98,6 +98,9 @@ jobs:
 #        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
 #        echo "DEBUG=False" >> $GITHUB_ENV
 
+    - name: Run migrations
+      run: |
+        python manage.py migrate --noinput
     # Запускаем тесты
     - name: Run tests
       run: |
@@ -140,8 +143,31 @@ jobs:
           username: ${{ secrets.SSH_USER_SERVER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
-            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+            # 1. Переходим в папку проекта
+            cd /home/alexandra/drf_projects/drf-app-30
+            
+            # 2. Останавливаем и удаляем ВСЁ
+            echo "🛑 Останавливаем всё..."
+            docker-compose down -v --remove-orphans 2>/dev/null || true
+            docker rm -f $(docker ps -aq) 2>/dev/null || true
+            
+            # 3. Получаем последний образ
+            echo "📥 Получаем новый образ..."
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+            
+            # 4. Обновляем docker-compose.yml (если нужно)
+            sed -i "s|image: .*/${{ env.DOCKER_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|" docker-compose.yml || true
+                     
+            # Запускаем ВЕСЬ стек
+            docker-compose up -d --build
+            
+            # Проверяем
+            sleep 10
+            docker-compose ps
+            curl -I http://localhost || echo "Проверка не удалась"
+
+#            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+#            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+#            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
+#            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
+#            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
