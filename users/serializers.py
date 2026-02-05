@@ -8,16 +8,19 @@ class PaymentsSerializer(ModelSerializer):
 
     class Meta:
         """Метаданные сериализатора платежи."""
+
         model = Payments
         fields = "__all__"
 
 
 class UserSerializer(ModelSerializer):
     """Сериализатор для модели Пользователь."""
+
     payments_set = PaymentsSerializer(many=True, read_only=True)
 
     class Meta:
         """Метаданные сериализатора пользователь."""
+
         model = User
         fields = ("id", "email", "phone", "city", "avatar", "payments_set")
 
@@ -28,17 +31,21 @@ class UserSerializer(ModelSerializer):
 
 class UserRegistrationSerializer(ModelSerializer):
     """Сериализатор для регистрации пользователя."""
+
     class Meta:
         """Метаданные сериализатора."""
+
         model = User
         fields = ("id", "email", "password", "phone", "city", "avatar")
 
 
 class UserHistoryPaymentsSerializer(ModelSerializer):
     """Сериализатор для модели История платежей."""
+
     payments_set = PaymentsSerializer(many=True, read_only=True)
 
     class Meta:
         """Метаданные сериализатора История платежей."""
+
         model = User
         fields = ("id", "email", "phone", "city", "payments_set")

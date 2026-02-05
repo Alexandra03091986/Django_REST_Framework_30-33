@@ -44,6 +44,7 @@ class Course(models.Model):
 
 class Lesson(models.Model):
     """Модель урока в рамках курса"""
+
     name = models.CharField(
         max_length=100,
         verbose_name="Название урока",
@@ -93,31 +94,22 @@ class Lesson(models.Model):
 
 class Subscription(models.Model):
     """Модель подписки на курс"""
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Пользователь",
         help_text="Укажите пользователя",
     )
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.CASCADE,
-        verbose_name="Курс",
-        help_text="Укажите курс"
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс", help_text="Укажите курс")
     is_active = models.BooleanField(
-        default=True,
-        verbose_name="Активная подписка",
-        help_text="Отметка об активности подписки"
+        default=True, verbose_name="Активная подписка", help_text="Отметка об активности подписки"
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата создания"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
 
     def __str__(self):
-        return f'Подписка пользователя {self.user} на курс {self.course}'
+        return f"Подписка пользователя {self.user} на курс {self.course}"
